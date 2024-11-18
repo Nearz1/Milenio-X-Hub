@@ -1,5 +1,5 @@
 -- Library: TabUI
--- Purpose: Criação de uma interface com abas reutilizáveis.
+-- Purpose: Criação de uma interface com abas reutilizáveis, botões, input e toggle.
 
 local TabUI = {}
 
@@ -52,7 +52,8 @@ function TabUI.new()
         TabButton.Text = name
         TabButton.TextColor3 = Color3.fromRGB(0, 0, 0)
         TabButton.TextScaled = true
-        UICorner.Parent = TabButton
+        local corner = Instance.new("UICorner")
+        corner.Parent = TabButton
 
         TabButton.MouseButton1Click:Connect(function()
             onClick()
@@ -80,7 +81,7 @@ function TabUI.new()
         TabContentUIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
         TabContentUIListLayout.Padding = UDim.new(0, 5)
 
-        return TabContentFrame
+        return TabContentFrame, TabContentScrollingFrame
     end
 
     -- Função para alternar entre as abas
@@ -128,9 +129,40 @@ function TabUI.new()
             setActiveTab(TabContentFrame)
         end)
 
-        local TabContentFrame = createTabContent(tabName)
+        local TabContentFrame, TabContentScrollingFrame = createTabContent(tabName)
         
-        -- Retorna o conteúdo da aba para você poder adicionar elementos a ele
+        -- Adicionando um botão de toggle dentro da aba
+        local toggleButton = Instance.new("TextButton")
+        toggleButton.Parent = TabContentScrollingFrame
+        toggleButton.Text = "Toggle Button"
+        toggleButton.Size = UDim2.new(0, 200, 0, 50)
+        toggleButton.Font = Enum.Font.PermanentMarker
+        toggleButton.TextScaled = true
+        toggleButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        toggleButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
+        local corner = Instance.new("UICorner")
+        corner.Parent = toggleButton
+        local toggleState = false
+
+        toggleButton.MouseButton1Click:Connect(function()
+            toggleState = not toggleState
+            toggleButton.Text = toggleState and "Activated" or "Deactivated"
+        end)
+
+        -- Adicionando um input text dentro da aba
+        local inputText = Instance.new("TextBox")
+        inputText.Parent = TabContentScrollingFrame
+        inputText.Size = UDim2.new(0, 200, 0, 50)
+        inputText.Position = UDim2.new(0, 0, 0, 60)
+        inputText.PlaceholderText = "Type something..."
+        inputText.Font = Enum.Font.PermanentMarker
+        inputText.TextScaled = true
+        inputText.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        inputText.BorderColor3 = Color3.fromRGB(0, 0, 0)
+        local cornerInput = Instance.new("UICorner")
+        cornerInput.Parent = inputText
+
+        -- Retorna o conteúdo da aba para você poder adicionar mais elementos a ela
         return TabContentFrame
     end
 
